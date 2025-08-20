@@ -33,8 +33,8 @@ log_lines = [
 #         print(f"[SECURITY]: Line Number{line_num} Unauthorized login attempt -> {line}")
 
 
-def analyze_logs(log_file, thershold=2, **options):
-    verbose = options.get('verbose', False)
+def analyze_logs(log_file, thershold=2,**kwargs):
+    verbose = kwargs.get("verbose", False)
     failed_count = 0
 
     with open(log_file, "r") as file:
@@ -48,3 +48,48 @@ def analyze_logs(log_file, thershold=2, **options):
         print(f"[ALERT] {failed_count} failed login attempts detected (threshold={thershold})")
     else:
         print(f"[INFO] {failed_count} failed attempts — below threshold")
+
+
+# analyze_logs("./data", 30, verbose=True)
+
+def pluse_nums(a, b):
+    return a + b
+
+result=pluse_nums(4,5)
+# print(result)
+
+
+from collections import namedtuple
+
+Event = namedtuple("Event", ["ip", "risk_score"])
+
+
+events = [
+    Event("192.168.1.10", 5.0),
+    Event("203.0.113.45", 9.2),
+    Event("198.51.100.23", 8.7)
+]
+# print(events[2])
+suspicious_ips = [x.ip for x in events if x.risk_score > 7.0]
+
+# print(f"[THREAT] High-risk IPs: {suspicious_ips}")
+
+
+from pathlib import Path
+
+with open("evidence.log","r") as f:
+    if f.read() is None:
+        Path("evidence.log").write_text(
+            "File hash: abc123\n"
+            "Timestamp: 2025-08-14 12:00:00\n"
+            "Source IP: 203.0.113.45\n"
+        )
+
+def process_evidence_line(line):
+    print(f"[EVIDENCE] Processing: {line.strip()}")
+
+with Path("evidence.log").open() as file:
+    for line in file:
+        process_evidence_line(line)
+
+
